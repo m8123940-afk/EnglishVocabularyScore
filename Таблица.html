@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Таблица</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1fb;--card:#fff;--ink:#1f2d4d;--accent:#5c6bc0;--muted:#8a96b8;--line:#d5daea;--danger:#e5484d;--hl:#f3f5fd;--strip:#e8ecfb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a2e;--card:#1e2640;--ink:#e6eaf8;--accent:#8c9bef;--muted:#7f8bb0;--line:#38426b;--hl:#232c4a;--strip:#1a2140}}
+:root[data-theme="dark"]{--bg:#141a2e;--card:#1e2640;--ink:#e6eaf8;--accent:#8c9bef;--muted:#7f8bb0;--line:#38426b;--hl:#232c4a;--strip:#1a2140}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Space Grotesk","Segoe UI",system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.wrap{max-width:960px;margin:0 auto;padding:16px 12px 90px}
+.hidden{display:none!important}
+button{font-family:inherit}
+.view{animation:viewIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* menu */
+.menu{text-align:center;padding-top:14vh}
+.logo{width:84px;height:84px;margin:0 auto 18px;border-radius:24px;background:linear-gradient(135deg,#7986cb,#5c6bc0);display:grid;place-items:center;color:#fff;font-size:42px;box-shadow:0 12px 30px rgba(92,107,192,.4);animation:float 3.2s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px) rotate(-3deg)}}
+.menu h1{font-size:44px;margin:0 0 6px;font-weight:700;letter-spacing:-.5px}
+.menu p{color:var(--muted);margin:0 0 34px}
+.btns{display:flex;flex-direction:column;gap:14px;max-width:340px;margin:0 auto}
+.big{border:2px solid var(--accent);border-radius:16px;padding:17px;font-size:18px;cursor:pointer;background:var(--accent);color:#fff;font-weight:600;transition:transform .15s,box-shadow .2s,filter .2s}
+.big:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(92,107,192,.35)}
+.big:active{transform:scale(.97)}
+.big.alt{background:var(--card);color:var(--accent)}
+.big:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.menu .btns .big{animation:viewIn .6s both}
+.menu .btns .big:nth-child(2){animation-delay:.1s}
+
+/* panels */
+.panel{background:var(--card);border-radius:14px;padding:24px;max-width:480px;margin:9vh auto 0;text-align:center}
+.panel h2{margin:0 0 16px;font-weight:600}
+input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit;color:var(--ink);background:var(--card);outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(92,107,192,.18)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 18px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:6px 12px;font-size:14px;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.row2{display:flex;gap:10px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.link{background:none;border:0;color:var(--accent);cursor:pointer;font-size:15px;padding:8px 6px;font-weight:500}
+.link:hover{text-decoration:underline}
+.tl{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.t{display:flex;align-items:center;gap:10px;padding:16px;background:var(--card);border-radius:12px;cursor:pointer;transition:transform .15s,box-shadow .2s;animation:rowIn .4s both}
+.t:hover{transform:translateX(4px);box-shadow:0 4px 14px rgba(92,107,192,.25)}
+.t b{flex:1;font-weight:500;font-size:17px}
+.t span{color:var(--muted);font-size:14px}
+
+/* table – like the reference */
+.head{background:var(--card);border-radius:10px;text-align:center;padding:22px 16px 40px;cursor:pointer;position:relative;transition:box-shadow .2s}
+.head:hover{box-shadow:0 0 0 2px var(--line)}
+.head h1{margin:0;font-weight:500;font-size:30px;letter-spacing:.2px;word-break:break-word}
+.head small{position:absolute;right:14px;top:10px;color:var(--muted);font-size:13px;opacity:0;transition:.2s}
+.head:hover small{opacity:1}
+.strip{height:14px;background:var(--strip);margin:0 0 12px;border-radius:0 0 4px 4px;position:relative;top:-14px;margin-bottom:-2px}
+.list{display:flex;flex-direction:column;gap:6px;position:relative}
+.item{display:flex;align-items:center;gap:12px;padding:0 6px 0 22px;height:60px;background:var(--card);border-radius:10px;transition:background .2s,box-shadow .2s}
+.item:hover{background:var(--hl)}
+.item.in{animation:rowIn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rowIn{from{opacity:0;transform:translateX(-24px) scale(.97)}to{opacity:1;transform:none}}
+.rank{width:30px;color:var(--accent);font-size:15px;flex:none}
+.name{flex:1;min-width:0;font-size:20px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;background:none;border:0;color:var(--ink);text-align:left;padding:0;height:100%}
+.name:hover{color:var(--accent)}
+.score{font-weight:700;color:var(--accent);font-size:26px;min-width:56px;text-align:right;flex:none;margin-right:8px}
+.score.neg{color:var(--danger)}
+.score.bump{animation:bump .35s}
+@keyframes bump{40%{transform:scale(1.35)}}
+.pts{display:flex;gap:6px;flex:none}
+.pts button{width:42px;height:42px;border:1.5px solid var(--ink);background:transparent;border-radius:9px;cursor:pointer;color:var(--ink);font-size:17px;transition:transform .12s,background .15s,color .15s}
+.pts button:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.pts button:active{transform:scale(.88)}
+.empty{text-align:center;color:var(--muted);padding:50px 0;background:var(--card);border-radius:10px;animation:viewIn .5s}
+.empty .e{font-size:44px;display:block;margin-bottom:8px;animation:float 3s ease-in-out infinite}
+.fab{position:fixed;right:max(18px,calc(50% - 460px));bottom:calc(18px + env(safe-area-inset-bottom,0px));border:0;background:var(--accent);color:#fff;font-size:17px;font-weight:600;padding:15px 22px;border-radius:30px;cursor:pointer;box-shadow:0 8px 24px rgba(92,107,192,.5);transition:transform .15s;z-index:5}
+.fab:hover{transform:translateY(-3px)}.fab:active{transform:scale(.95)}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(20,26,50,.5);display:grid;place-items:center;padding:16px;z-index:20;animation:fade .2s;backdrop-filter:blur(3px)}
+@keyframes fade{from{opacity:0}}
+.md{background:var(--card);border-radius:18px;padding:22px;width:100%;max-width:400px;animation:pop .3s cubic-bezier(.2,1.2,.3,1)}
+@keyframes pop{from{opacity:0;transform:scale(.88) translateY(10px)}}
+.md h3{margin:0 0 14px;font-weight:600;font-size:20px}
+.md label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+.md .acts{display:flex;gap:8px;margin-top:18px}
+.md .acts button,.md .inl button{border:0;border-radius:10px;padding:12px 16px;font-size:15px;cursor:pointer;font-weight:600;flex:1;background:var(--accent);color:#fff;transition:.15s}
+.md .acts button:active,.md .inl button:active{transform:scale(.96)}
+.md .acts .g{background:var(--hl);color:var(--ink)}
+.md .acts .d{background:var(--danger)}
+.md .inl{display:flex;gap:8px}.md .inl button{flex:none;padding:0 18px}
+.md .err{color:var(--danger);font-size:13px;min-height:16px;margin-top:6px}
+
+@media(max-width:640px){
+ .item{height:auto;flex-wrap:wrap;padding:10px 8px 10px 14px;row-gap:8px}
+ .name{flex-basis:calc(100% - 130px);height:34px;font-size:18px}
+ .pts{width:100%;justify-content:space-between}.pts button{flex:1;height:44px}
+ .head h1{font-size:23px}.menu h1{font-size:36px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section id="menu" class="menu view">
+  <div class="logo">📊</div>
+  <h1>Таблица</h1>
+  <p>Рейтинг по баллам</p>
+  <div class="btns">
+    <button class="big" id="bNew">Новая таблица</button>
+    <button class="big alt" id="bCur">Текущая таблица</button>
+  </div>
+</section>
+
+<section id="create" class="hidden view">
+  <div class="panel">
+    <h2>Заголовок таблицы</h2>
+    <input type="text" id="titleIn" placeholder="The Best Student of October" maxlength="60">
+    <div class="chips" id="chips"></div>
+    <div class="row2">
+      <button class="big alt" id="cBack" style="flex:1;padding:12px;font-size:16px">Назад</button>
+      <button class="big" id="cOk" style="flex:1;padding:12px;font-size:16px">Создать</button>
+    </div>
+  </div>
+</section>
+
+<section id="list" class="hidden view">
+  <div class="top"><button class="link" id="lBack">← Меню</button></div>
+  <h2 style="font-weight:600;margin:6px 4px 12px">Текущие таблицы</h2>
+  <div class="tl" id="tl"></div>
+</section>
+
+<section id="table" class="hidden view">
+  <div class="top"><button class="link" id="tBack">← Меню</button></div>
+  <div class="head" id="head"><small>✎ изменить заголовок</small><h1 id="tTitle"></h1></div>
+  <div class="strip"></div>
+  <div class="list" id="rows"></div>
+  <button class="fab" id="fab">＋ Участник</button>
+</section>
+
+</div>
+<div id="mount"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY="tablitsa_v2";
+let S={tables:[],cur:null};
+try{const r=localStorage.getItem(KEY);if(r){const j=JSON.parse(r);if(j&&Array.isArray(j.tables))S=j}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function show(id){["menu","create","list","table"].forEach(x=>{const e=$(x);e.classList.toggle("hidden",x!==id);if(x===id){e.classList.remove("view");void e.offsetWidth;e.classList.add("view")}})}
+const curT=()=>S.tables.find(t=>t.id===S.cur);
+
+/* modal */
+function modal(html,setup){
+  const o=document.createElement("div");o.className="ov";o.innerHTML='<div class="md">'+html+'</div>';
+  const close=()=>o.remove();
+  o.addEventListener("mousedown",e=>{if(e.target===o)close()});
+  o.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+  $("mount").appendChild(o);setup(o.firstChild,close);
+  const f=o.querySelector("input");if(f)setTimeout(()=>f.focus(),30);
+}
+
+function menu(){$("bCur").disabled=!S.tables.length;show("menu")}
+$("bNew").onclick=()=>{
+  const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  $("chips").innerHTML=M.map(m=>`<button class="chip" data-t="The Best Student of ${m}">${m}</button>`).join("");
+  $("titleIn").value="The Best Student of "+M[new Date().getMonth()];
+  show("create");setTimeout(()=>$("titleIn").select(),50);
+};
+$("chips").onclick=e=>{const t=e.target.dataset&&e.target.dataset.t;if(t)$("titleIn").value=t};
+$("cBack").onclick=menu;
+$("cOk").onclick=()=>{
+  const t=$("titleIn").value.trim();if(!t){$("titleIn").focus();return}
+  const o={id:uid(),title:t,people:[]};S.tables.push(o);S.cur=o.id;save();openTable();
+};
+$("titleIn").onkeydown=e=>{if(e.key==="Enter")$("cOk").click()};
+$("bCur").onclick=()=>{
+  if(S.tables.length===1){S.cur=S.tables[0].id;openTable();return}
+  renderList();show("list");
+};
+$("lBack").onclick=menu;$("tBack").onclick=menu;
+function renderList(){
+  $("tl").innerHTML=S.tables.slice().reverse().map((t,i)=>`<div class="t" data-id="${t.id}" style="animation-delay:${i*.05}s"><b>${esc(t.title)}</b><span>${t.people.length} уч.</span></div>`).join("");
+}
+$("tl").onclick=e=>{const t=e.target.closest(".t");if(t){S.cur=t.dataset.id;openTable()}};
+
+/* table */
+function openTable(){render(true);show("table")}
+function ranked(t){
+  const p=t.people.slice().sort((a,b)=>b.pts-a.pts||a.name.localeCompare(b.name,"ru"));
+  let r=0,prev=null;
+  return p.map(x=>{if(x.pts!==prev){r++;prev=x.pts}return{...x,rank:r}});
+}
+let bumpId=null;
+function render(fresh){
+  const t=curT();if(!t)return menu();
+  $("tTitle").textContent=t.title;
+  const old={};
+  if(!fresh)document.querySelectorAll(".item").forEach(el=>old[el.dataset.id]=el.getBoundingClientRect().top);
+  const r=ranked(t);
+  $("rows").innerHTML=r.length?r.map(x=>`
+   <div class="item${fresh||!(x.id in old)?" in":""}" data-id="${x.id}">
+     <div class="rank">${x.rank}</div>
+     <button class="name" data-a="edit" title="Изменить">${esc(x.name)}</button>
+     <div class="score${x.pts<0?" neg":""}${bumpId===x.id?" bump":""}">${x.pts}</div>
+     <div class="pts"><button data-d="-5">-5</button><button data-d="-1">-1</button><button data-d="1">+1</button><button data-d="5">+5</button></div>
+   </div>`).join(""):`<div class="empty"><span class="e">👥</span>Пока никого нет.<br>Нажмите «＋ Участник», чтобы добавить первого.</div>`;
+  if(!fresh)document.querySelectorAll(".item").forEach(el=>{
+    const o=old[el.dataset.id];if(o===undefined)return;
+    const d=o-el.getBoundingClientRect().top;
+    if(d&&el.animate)el.animate([{transform:`translateY(${d}px)`,zIndex:2},{transform:"none",zIndex:2}],{duration:450,easing:"cubic-bezier(.2,.8,.2,1)"});
+  });
+  bumpId=null;
+}
+$("rows").onclick=e=>{
+  const it=e.target.closest(".item");if(!it)return;
+  const t=curT(),p=t.people.find(x=>x.id===it.dataset.id);if(!p)return;
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.d){p.pts+=+b.dataset.d;bumpId=p.id;save();render()}
+  else if(b.dataset.a==="edit")editP(p);
+};
+function editP(p){
+  modal(`<h3>Участник</h3>
+   <label>Имя</label><input type="text" id="mN" maxlength="60" value="${esc(p.name)}">
+   <label>Баллы сейчас</label><input type="number" id="mS" value="${p.pts}">
+   <label>Добавить к баллам (можно минус)</label>
+   <div class="inl"><input type="number" id="mA" placeholder="например 25"><button id="mAb">＋</button></div>
+   <div class="err" id="mE"></div>
+   <div class="acts"><button class="d" id="mD">Удалить</button><button class="g" id="mC">Отмена</button><button id="mOk">Сохранить</button></div>`,(m,close)=>{
+    const q=s=>m.querySelector(s);let armed=false;
+    const apply=()=>{const n=q("#mN").value.trim();if(!n){q("#mE").textContent="Введите имя";return false}
+      const s=Math.round(+q("#mS").value);if(q("#mS").value===""||isNaN(s)){q("#mE").textContent="Баллы — число";return false}
+      p.name=n;p.pts=s;return true};
+    q("#mAb").onclick=()=>{const a=Math.round(+q("#mA").value);if(q("#mA").value===""||isNaN(a))return;q("#mS").value=(+q("#mS").value||0)+a;q("#mA").value=""};
+    q("#mC").onclick=close;
+    q("#mOk").onclick=()=>{if(apply()){bumpId=p.id;save();render();close()}};
+    q("#mD").onclick=function(){
+      if(!armed){armed=true;this.textContent="Точно удалить?";return}
+      const t=curT();t.people=t.people.filter(x=>x!==p);save();render();close();
+    };
+    m.onkeydown=e=>{if(e.key==="Enter")q("#mOk").click()};
+  });
+}
+function addP(){
+  modal(`<h3>Новый участник</h3>
+   <label>Имя</label><input type="text" id="mN" maxlength="60" placeholder="Имя Фамилия">
+   <label>Стартовые баллы</label><input type="number" id="mS" value="0">
+   <div class="err" id="mE"></div>
+   <div class="acts"><button class="g" id="mC">Отмена</button><button id="mOk">Добавить</button></div>`,(m,close)=>{
+    const q=s=>m.querySelector(s);
+    q("#mC").onclick=close;
+    const go=()=>{const n=q("#mN").value.trim();if(!n){q("#mE").textContent="Введите имя";return}
+      const s=Math.round(+q("#mS").value)||0;const p={id:uid(),name:n,pts:s};
+      curT().people.push(p);save();render();close()};
+    q("#mOk").onclick=go;m.onkeydown=e=>{if(e.key==="Enter")go()};
+  });
+}
+$("fab").onclick=addP;
+$("head").onclick=()=>{
+  const t=curT();
+  modal(`<h3>Заголовок таблицы</h3><input type="text" id="mN" maxlength="60" value="${esc(t.title)}"><div class="err" id="mE"></div>
+   <div class="acts"><button class="g" id="mC">Отмена</button><button id="mOk">Сохранить</button></div>`,(m,close)=>{
+    const q=s=>m.querySelector(s);q("#mC").onclick=close;
+    const go=()=>{const n=q("#mN").value.trim();if(!n){q("#mE").textContent="Введите заголовок";return}t.title=n;save();render();close()};
+    q("#mOk").onclick=go;m.onkeydown=e=>{if(e.key==="Enter")go()};
+  });
+};
+menu();
+</script>
+</body>
+</html>
